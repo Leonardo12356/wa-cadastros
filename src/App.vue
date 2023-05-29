@@ -18,7 +18,7 @@
         <tr v-for="person in people" :key="person.id">
           <td>{{ person.nome }}</td>
           <td>{{ person.cpf }}</td>
-          <td>{{ person.dataNascimento }}</td>
+          <td>{{ formatAge(person.dtNascimento) }} Anos</td>
           <td>{{ person.endereco }}</td>
           <td>{{ person.sexo }}</td>
           <td>
@@ -55,18 +55,21 @@
 
           <div class="cada-campo">
             <label for="sexo">Sexo:</label>
-            <div class="cada-campo">
-              <input type="radio" id="masculino" v-model="form.sexo" value="Masculino">
-              <label for="masculino">Masculino</label>
-            </div>
-            <div class="cada-campo-fen">
-              <input type="radio" id="feminino" v-model="form.sexo" value="Feminino">
-              <label for="feminino">Feminino</label>
+            <div class="campo-checkbox">
+
+              <div class="cada-campo">
+                <input type="radio" id="masculino" v-model="form.sexo" value="Masculino">
+                <label for="masculino">Masculino</label>
+              </div>
+              <div class="cada-campo">
+                <input type="radio" id="feminino" v-model="form.sexo" value="Feminino">
+                <label for="feminino">Feminino</label>
+              </div>
             </div>
           </div>
 
           <div class="botoes">
-            <button type="submit">Salvar</button>
+            <button type="submit">Gravar</button>
             <button @click="cancelModal">Cancelar</button>
           </div>
 
@@ -99,10 +102,20 @@ export default {
   mounted() {
     this.fetchPeople();
   },
+
+
   methods: {
     formatDateString: function (date) {
       const dateFormated = new Date(date);
       return dateFormated.toISOString();
+    }, formatAge: function (date) {
+      const dateFormated = new Date(date);
+      const anoAux = dateFormated.getFullYear();
+      const anoAtual = new Date().getFullYear();
+      const idade = anoAtual - anoAux;
+      console.log(idade);
+      return idade;
+
     },
     fetchPeople() {
       services.pessoas.getPessoas()
@@ -243,6 +256,11 @@ tbody td {
   padding: 2px;
 }
 
+.campo-checkbox {
+  display: flex;
+  flex-direction: row;
+}
+
 tbody tr:hover {
   background-color: rgba(185, 185, 185, 0.7);
 }
@@ -300,9 +318,9 @@ td:last-child {
   margin-bottom: 10px;
 }
 
-.cada-campo:last-child {
+/* .cada-campo:last-child {
   margin-bottom: 0;
-}
+} */
 
 label {
   width: 120px;
